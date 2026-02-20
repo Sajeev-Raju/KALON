@@ -1,0 +1,79 @@
+.sitemap-page {
+  padding: 60px 0;
+  min-height: 70vh;
+}
+
+.sitemap-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sitemap-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.sitemap-header p {
+  font-size: 18px;
+  color: #666;
+}
+
+.sitemap-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sitemap-section {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sitemap-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.sitemap-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sitemap-section li {
+  margin-bottom: 12px;
+}
+
+.sitemap-section a {
+  color: #666;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s;
+  display: block;
+  padding: 4px 0;
+}
+
+.sitemap-section a:hover {
+  color: #667eea;
+  padding-left: 8px;
+  transition: all 0.2s;
+}
+
+@media (max-width: 768px) {
+  .sitemap-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Return Request Update</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5; padding: 40px 0;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 4px; overflow: hidden;">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color: #000000; padding: 30px 40px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 6px;">KALON</h1>
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding: 40px;">
+                        <!-- Dynamic heading based on status -->
+                        <h2 th:if="${statusAction == 'Approved'}" style="color: #28a745; margin: 0 0 8px; font-size: 24px; font-weight: 400;">Return Request Approved</h2>
+                        <h2 th:if="${statusAction == 'Rejected'}" style="color: #dc3545; margin: 0 0 8px; font-size: 24px; font-weight: 400;">Return Request Rejected</h2>
+                        <h2 th:if="${statusAction == 'Processing'}" style="color: #007bff; margin: 0 0 8px; font-size: 24px; font-weight: 400;">Return In Progress</h2>
+                        <h2 th:if="${statusAction == 'Completed'}" style="color: #28a745; margin: 0 0 8px; font-size: 24px; font-weight: 400;">Return Completed</h2>
+
+                        <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px;">
+                            Hi <span th:text="${firstName}">there</span>, here's an update on your <span th:text="${requestType == 'RETURN'} ? 'return' : 'exchange'">return</span> request.
+                        </p>
+
+                        <!-- Return Details -->
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f9f9f9; border-radius: 4px; margin-bottom: 24px;">
+                            <tr>
+                                <td style="padding: 16px;">
+                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="padding: 6px 0; color: #666666; font-size: 14px;">Return ID</td>
+                                            <td style="padding: 6px 0; color: #000000; font-size: 14px; font-weight: 600; text-align: right;" th:text="'#' + ${returnId}">#1</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 6px 0; color: #666666; font-size: 14px;">Order Number</td>
+                                            <td style="padding: 6px 0; color: #000000; font-size: 14px; text-align: right;" th:text="${orderNumber}">KLN123456</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 6px 0; color: #666666; font-size: 14px;">Product</td>
+                                            <td style="padding: 6px 0; color: #000000; font-size: 14px; text-align: right;" th:text="${productName}">Product Name</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 6px 0; color: #666666; font-size: 14px;">Type</td>
+                                            <td style="padding: 6px 0; color: #000000; font-size: 14px; text-align: right;" th:text="${requestType}">RETURN</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 6px 0; color: #666666; font-size: 14px;">Status</td>
+                                            <td style="padding: 6px 0; color: #000000; font-size: 14px; font-weight: 600; text-align: right;" th:text="${status}">APPROVED</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Refund Amount (for RETURN type) -->
+                        <div th:if="${requestType == 'RETURN' and refundAmount != null}" style="background-color: #f0f9f0; padding: 16px; border-radius: 4px; margin-bottom: 24px; border-left: 4px solid #28a745;">
+                            <p style="color: #333333; font-size: 14px; margin: 0;">
+                                Refund Amount: <strong th:text="'&#8377;' + ${#numbers.formatDecimal(refundAmount, 0, 2)}">&#8377;999.00</strong>
+                            </p>
+                            <p th:if="${statusAction == 'Completed'}" style="color: #666666; font-size: 13px; margin: 8px 0 0;">
+                                The refund has been processed and will reflect in your account within 5-7 business days.
+                            </p>
+                            <p th:if="${statusAction == 'Processing'}" style="color: #666666; font-size: 13px; margin: 8px 0 0;">
+                                Your refund is being processed.
+                            </p>
+                        </div>
+
+                        <!-- Status-specific messages -->
+                        <div th:if="${statusAction == 'Approved'}" style="padding: 16px; background-color: #f0f9f0; border-radius: 4px; margin-bottom: 24px; border-left: 4px solid #28a745;">
+                            <p style="color: #333333; font-size: 14px; margin: 0;">
+                                Your request has been approved. Please ship the item back to us. We'll process your <span th:text="${requestType == 'RETURN'} ? 'refund' : 'exchange'">refund</span> once we receive it.
+                            </p>
+                        </div>
+
+                        <div th:if="${statusAction == 'Rejected'}" style="padding: 16px; background-color: #fff3f3; border-radius: 4px; margin-bottom: 24px; border-left: 4px solid #dc3545;">
+                            <p style="color: #333333; font-size: 14px; margin: 0;">
+                                Unfortunately, your return request has been rejected. If you have any questions, please contact our support team.
+                            </p>
+                        </div>
+
+                        <!-- Admin Notes -->
+                        <div th:if="${adminNotes != null and !adminNotes.isEmpty()}" style="padding: 16px; background-color: #f9f9f9; border-radius: 4px; margin-bottom: 24px; border-left: 4px solid #666666;">
+                            <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px; font-weight: 600;">Notes</p>
+                            <p style="color: #333333; font-size: 14px; margin: 0;" th:text="${adminNotes}">Admin notes here</p>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <table role="presentation" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="background-color: #000000; border-radius: 4px;">
+                                    <a th:href="${returnsUrl}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 1px;">VIEW RETURNS</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f9f9f9; padding: 24px 40px; text-align: center; border-top: 1px solid #eeeeee;">
+                        <p style="color: #999999; font-size: 12px; margin: 0;">
+                            &copy; 2025 KALON. All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

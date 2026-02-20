@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Low Stock Alert</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5; padding: 40px 0;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 4px; overflow: hidden;">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color: #000000; padding: 30px 40px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 6px;">KALON</h1>
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding: 40px;">
+                        <h2 style="color: #c0392b; margin: 0 0 10px; font-size: 22px; font-weight: 600;">
+                            Low Stock Alert
+                        </h2>
+                        <p style="color: #333333; font-size: 14px; line-height: 1.6; margin: 0 0 8px;">
+                            <span th:text="${alertCount}">5</span> variant(s) are below the stock threshold of
+                            <strong th:text="${threshold}">10</strong> units.
+                        </p>
+                        <p style="color: #666666; font-size: 13px; line-height: 1.6; margin: 0 0 24px;">
+                            Please review and restock as needed.
+                        </p>
+
+                        <!-- Table -->
+                        <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background-color: #f8f8f8;">
+                                    <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd; color: #333;">Product</th>
+                                    <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd; color: #333;">Size</th>
+                                    <th style="padding: 10px 8px; text-align: left; border-bottom: 2px solid #ddd; color: #333;">Color</th>
+                                    <th style="padding: 10px 8px; text-align: center; border-bottom: 2px solid #ddd; color: #333;">Stock</th>
+                                    <th style="padding: 10px 8px; text-align: center; border-bottom: 2px solid #ddd; color: #333;">Reorder Pt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${lowStockItems}" style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 10px 8px;" th:text="${item.productName}">Product Name</td>
+                                    <td style="padding: 10px 8px;" th:text="${item.size}">M</td>
+                                    <td style="padding: 10px 8px;" th:text="${item.color}">Black</td>
+                                    <td style="padding: 10px 8px; text-align: center; font-weight: 700; color: #c0392b;" th:text="${item.stockQuantity}">3</td>
+                                    <td style="padding: 10px 8px; text-align: center; color: #888;" th:text="${item.reorderPoint != null ? item.reorderPoint : '—'}">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f9f9f9; padding: 24px 40px; text-align: center; border-top: 1px solid #eeeeee;">
+                        <p style="color: #999999; font-size: 12px; margin: 0;">
+                            This is an automated alert from KALON inventory management.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

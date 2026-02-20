@@ -1,0 +1,67 @@
+# =========================
+# KALON Project .gitignore
+# =========================
+
+# ----- OS -----
+.DS_Store
+Thumbs.db
+
+# ----- IDE / Editor -----
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.sublime-workspace
+*.sublime-project
+
+# ----- Environment (keep .env.example) -----
+.env
+.env.local
+.env.*.local
+
+# ----- Backend (Spring Boot / Java) -----
+backend/target/
+backend/*.jar
+backend/*.war
+backend/*.class
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/!.mvn/wrapper/maven-wrapper.jar
+backend/uploads/
+backend/logs/
+*.log
+
+# ----- Frontend (Node / Vite) -----
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# ----- Admin Frontend -----
+admin-frontend/node_modules/
+admin-frontend/dist/
+admin-frontend/dist-ssr/
+
+# ----- Logs & temp -----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.tmp
+*.temp
+.cache/
+
+# ----- Build / package locks (optional: remove if you want to commit lock files) -----
+# package-lock.json and similar are usually committed for reproducible builds
+
+# ----- Misc -----
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+*~

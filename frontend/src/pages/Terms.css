@@ -1,0 +1,92 @@
+.terms-page {
+  padding: 60px 0;
+  min-height: 70vh;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.terms-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.last-updated {
+  font-size: 14px;
+  color: #999;
+}
+
+.terms-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.terms-content section {
+  margin-bottom: 50px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.terms-content h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.terms-content p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.terms-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.terms-content li {
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.terms-content li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.terms-content strong {
+  color: #333;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .terms-header h1 {
+    font-size: 32px;
+  }
+  
+  .terms-content section {
+    padding: 20px;
+  }
+}
+
+
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Your Order Has Been Delivered</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Arial, Helvetica, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5; padding: 40px 0;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 4px; overflow: hidden;">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color: #000000; padding: 30px 40px; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 6px;">KALON</h1>
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding: 40px;">
+                        <h2 style="color: #000000; margin: 0 0 8px; font-size: 24px; font-weight: 400;">Your Order Has Been Delivered!</h2>
+                        <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px;">
+                            Hi <span th:text="${firstName}">there</span>, your order <strong th:text="${orderNumber}">KLN123456</strong> has been delivered successfully.
+                        </p>
+
+                        <p style="color: #333333; font-size: 14px; line-height: 1.6; margin: 0 0 24px;">
+                            We hope you love your purchase! If you have any issues with your order, please don't hesitate to reach out.
+                        </p>
+
+                        <!-- Items -->
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top: 2px solid #000000; margin-bottom: 24px;">
+                            <tr style="border-bottom: 1px solid #eeeeee;">
+                                <td style="padding: 12px 0; font-size: 12px; font-weight: 600; color: #666666; text-transform: uppercase; letter-spacing: 1px;">Item</td>
+                                <td style="padding: 12px 0; font-size: 12px; font-weight: 600; color: #666666; text-transform: uppercase; letter-spacing: 1px; text-align: center;">Qty</td>
+                                <td style="padding: 12px 0; font-size: 12px; font-weight: 600; color: #666666; text-transform: uppercase; letter-spacing: 1px; text-align: right;">Price</td>
+                            </tr>
+                            <tr th:each="item : ${items}" style="border-bottom: 1px solid #eeeeee;">
+                                <td style="padding: 12px 0;">
+                                    <span style="color: #000000; font-size: 14px; font-weight: 500;" th:text="${item.productName}">Product Name</span>
+                                    <br/>
+                                    <span style="color: #999999; font-size: 12px;" th:text="${item.size} + ' / ' + ${item.color}">M / Black</span>
+                                </td>
+                                <td style="padding: 12px 0; color: #333333; font-size: 14px; text-align: center;" th:text="${item.quantity}">1</td>
+                                <td style="padding: 12px 0; color: #333333; font-size: 14px; text-align: right;" th:text="'&#8377;' + ${#numbers.formatDecimal(item.totalPrice, 0, 2)}">&#8377;999.00</td>
+                            </tr>
+                        </table>
+
+                        <!-- Totals -->
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 24px;">
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-size: 14px;">Subtotal</td>
+                                <td style="padding: 4px 0; color: #333333; font-size: 14px; text-align: right;" th:text="'&#8377;' + ${#numbers.formatDecimal(subtotal, 0, 2)}">&#8377;999.00</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-size: 14px;">Shipping</td>
+                                <td style="padding: 4px 0; color: #333333; font-size: 14px; text-align: right;" th:text="${shippingCost.compareTo(T(java.math.BigDecimal).ZERO) == 0} ? 'FREE' : '&#8377;' + ${#numbers.formatDecimal(shippingCost, 0, 2)}">FREE</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 0 0; color: #000000; font-size: 16px; font-weight: 600; border-top: 2px solid #000000;">Total</td>
+                                <td style="padding: 12px 0 0; color: #000000; font-size: 16px; font-weight: 600; text-align: right; border-top: 2px solid #000000;" th:text="'&#8377;' + ${#numbers.formatDecimal(totalAmount, 0, 2)}">&#8377;999.00</td>
+                            </tr>
+                        </table>
+
+                        <!-- Delivered To -->
+                        <div th:if="${shippingAddress != null}" style="background-color: #f9f9f9; padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                            <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 8px; font-weight: 600;">Delivered To</p>
+                            <p style="color: #333333; font-size: 14px; line-height: 1.5; margin: 0;">
+                                <span th:text="${shippingAddress.fullName}">Name</span><br/>
+                                <span th:text="${shippingAddress.addressLine1}">Address 1</span><br/>
+                                <span th:if="${shippingAddress.addressLine2 != null}" th:text="${shippingAddress.addressLine2}">Address 2</span>
+                                <br th:if="${shippingAddress.addressLine2 != null}"/>
+                                <span th:text="${shippingAddress.city} + ', ' + ${shippingAddress.state} + ' - ' + ${shippingAddress.postalCode}">City, State - PIN</span>
+                            </p>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <table role="presentation" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td style="background-color: #000000; border-radius: 4px;">
+                                    <a th:href="${ordersUrl}" style="display: inline-block; padding: 14px 32px; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 1px;">VIEW YOUR ORDER</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f9f9f9; padding: 24px 40px; text-align: center; border-top: 1px solid #eeeeee;">
+                        <p style="color: #999999; font-size: 12px; margin: 0;">
+                            &copy; 2025 KALON. All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
