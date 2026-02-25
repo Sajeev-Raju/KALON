@@ -53,6 +53,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
            "GROUP BY u.id", nativeQuery = true)
     List<Object[]> customerLifetimeValues();
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.role = com.kalon.entity.User.Role.USER AND u.isActive = true")
+    @Query(value = "SELECT COUNT(*) FROM users u WHERE u.role = 'USER' AND u.is_active = true", nativeQuery = true)
     Long countActiveUsers();
 }

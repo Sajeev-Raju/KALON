@@ -1,0 +1,5 @@
+# Require repo owner's approval for backend only.
+# Frontend (/frontend/) and admin-frontend (/admin-frontend/) have no code owner here,
+# so PRs that only touch those can be merged without owner review (if branch protection allows).
+
+/backend/          @Sajeev-Raju

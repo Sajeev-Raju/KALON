@@ -117,8 +117,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Object[]> revenueByPaymentMethodInRange(@Param("startDate") LocalDateTime startDate,
                                                   @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT COUNT(o) FROM Order o WHERE o.status <> com.kalon.entity.Order.OrderStatus.CANCELLED " +
-           "AND o.createdAt >= :startDate AND o.createdAt < :endDate")
+    @Query(value = "SELECT COUNT(*) FROM orders o WHERE o.status != 'CANCELLED' " +
+           "AND o.created_at >= :startDate AND o.created_at < :endDate", nativeQuery = true)
     Long countOrdersInRange(@Param("startDate") LocalDateTime startDate,
                             @Param("endDate") LocalDateTime endDate);
 
@@ -145,9 +145,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                                                @Param("endDate") LocalDateTime endDate,
                                                Pageable pageable);
 
-    @Query("SELECT COUNT(DISTINCT o.user.id) FROM Order o " +
-           "WHERE o.createdAt >= :startDate AND o.createdAt < :endDate " +
-           "AND o.status <> com.kalon.entity.Order.OrderStatus.CANCELLED")
+    @Query(value = "SELECT COUNT(DISTINCT o.user_id) FROM orders o " +
+           "WHERE o.created_at >= :startDate AND o.created_at < :endDate " +
+           "AND o.status != 'CANCELLED'", nativeQuery = true)
     Long countDistinctCustomersInRange(@Param("startDate") LocalDateTime startDate,
                                         @Param("endDate") LocalDateTime endDate);
 
