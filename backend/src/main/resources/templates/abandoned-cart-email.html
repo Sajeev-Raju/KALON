@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #2d2d2d; padding: 30px; text-align: center;">
+            <h1 style="color: #c9a962; margin: 0; font-size: 28px;">KALON</h1>
+        </div>
+        <div style="padding: 30px;">
+            <h2 style="color: #2d2d2d; margin-top: 0;">You left something behind!</h2>
+            <p style="color: #666; line-height: 1.6;">
+                Hi <span th:text="${userName}">there</span>,
+            </p>
+            <p style="color: #666; line-height: 1.6;">
+                We noticed you have items in your cart that you haven't checked out yet.
+                Your favorite pieces are waiting for you!
+            </p>
+            <p style="color: #666; line-height: 1.6;">
+                You have <strong th:text="${itemCount}">0</strong> item(s) in your cart.
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a th:href="${cartUrl}"
+                   style="background-color: #2d2d2d; color: #c9a962; padding: 14px 40px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                    Complete Your Purchase
+                </a>
+            </div>
+            <p style="color: #999; font-size: 12px; margin-top: 30px;">
+                If you have any questions, feel free to reply to this email.
+            </p>
+        </div>
+        <div style="background-color: #f8f8f8; padding: 20px; text-align: center; color: #999; font-size: 12px;">
+            <p>&copy; 2024 KALON. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

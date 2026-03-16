@@ -5,10 +5,13 @@ import lombok.*;
 
 @Entity
 @Table(name = "product_images")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"product"})
 public class ProductImage {
 
     @Id

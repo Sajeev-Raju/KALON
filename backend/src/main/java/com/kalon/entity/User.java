@@ -8,10 +8,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"addresses", "cart", "orders", "wishlistItems"})
 public class User {
 
     @Id
@@ -45,6 +48,12 @@ public class User {
 
     @Column(name = "is_active")
     private boolean isActive = true;
+
+    @Column(name = "failed_login_attempts")
+    private int failedLoginAttempts = 0;
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

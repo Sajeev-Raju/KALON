@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
     @Index(name = "idx_activity_resource_type", columnList = "resource_type"),
     @Index(name = "idx_activity_created_at", columnList = "created_at")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"admin"})
 public class AdminActivityLog {
 
     @Id

@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
     @Index(name = "idx_sm_movement_type", columnList = "movement_type"),
     @Index(name = "idx_sm_created_at", columnList = "created_at")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"productVariant", "product", "createdBy"})
 public class StockMovement {
 
     @Id

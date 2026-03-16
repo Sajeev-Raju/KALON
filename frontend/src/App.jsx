@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 import ProductList from './pages/ProductList';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
@@ -34,6 +36,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
+        <ErrorBoundary>
         <Layout>
           <Routes>
             {/* Home */}
@@ -87,9 +90,10 @@ function App() {
             <Route path="/sitemap" element={<Sitemap />} />
 
             {/* Fallback */}
-            <Route path="*" element={<Home />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
+        </ErrorBoundary>
       </Router>
     </Provider>
   );

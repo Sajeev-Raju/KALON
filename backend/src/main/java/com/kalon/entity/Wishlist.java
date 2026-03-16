@@ -7,10 +7,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "wishlists",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"user", "product"})
 public class Wishlist {
 
     @Id

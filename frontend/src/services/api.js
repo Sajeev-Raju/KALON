@@ -191,6 +191,7 @@ export const orderAPI = {
   getPaymentMethods: () => api.get('/orders/payment-methods'),
   createRazorpayOrder: (data) => api.post('/orders/razorpay/create', data),
   verifyRazorpayPayment: (data) => api.post('/orders/razorpay/verify', data),
+  downloadInvoice: (orderId) => api.get(`/orders/${orderId}/invoice`, { responseType: 'blob' }),
 };
 
 // Return Request APIs
@@ -218,6 +219,11 @@ export const reviewAPI = {
   create: (data) => api.post('/reviews', data),
   update: (reviewId, data) => api.put(`/reviews/${reviewId}`, data),
   delete: (reviewId) => api.delete(`/reviews/${reviewId}`),
+};
+
+// Coupon APIs
+export const couponAPI = {
+  validate: (data) => api.post('/coupons/validate', data),
 };
 
 // User Profile APIs

@@ -82,6 +82,8 @@ const Header = () => {
         <button
           className="mobile-menu-toggle"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
         </button>
@@ -92,7 +94,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className={`main-nav ${isMobileMenuOpen ? 'open' : ''}`}>
+        <nav className={`main-nav ${isMobileMenuOpen ? 'open' : ''}`} role="navigation">
           <ul className="nav-list">
             <li className="nav-item">
               <Link to="/men" className="nav-link" onClick={() => setIsMobileMenuOpen(false)}>
@@ -163,7 +165,7 @@ const Header = () => {
             className={`search-container ${isSearchOpen ? 'open' : ''}`}
             ref={searchContainerRef}
           >
-            <button className="icon-btn" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <button className="icon-btn" onClick={() => setIsSearchOpen(!isSearchOpen)} aria-label="Search">
               <FiSearch />
             </button>
             {isSearchOpen && (
@@ -216,7 +218,7 @@ const Header = () => {
           </div>
 
           {/* Wishlist */}
-          <Link to="/wishlist" className="icon-btn wishlist-btn">
+          <Link to="/wishlist" className="icon-btn wishlist-btn" aria-label="Wishlist">
             <FiHeart />
             {activeWishlistCount > 0 && (
               <span className="badge">{activeWishlistCount}</span>
@@ -224,7 +226,7 @@ const Header = () => {
           </Link>
 
           {/* Cart */}
-          <Link to="/cart" className="icon-btn cart-btn">
+          <Link to="/cart" className="icon-btn cart-btn" aria-label="Cart">
             <FiShoppingBag />
             {activeCartCount > 0 && (
               <span className="badge">{activeCartCount}</span>

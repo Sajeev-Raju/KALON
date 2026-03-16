@@ -18,15 +18,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByUserId(Long userId, Pageable pageable);
     Optional<Order> findByOrderNumber(String orderNumber);
 
-    @EntityGraph(attributePaths = {"items", "items.product", "items.product.images"})
+    @EntityGraph(attributePaths = {"items"})
     @Query("SELECT o FROM Order o WHERE o.id = :id")
     Optional<Order> findByIdWithItems(@Param("id") Long id);
 
-    @EntityGraph(attributePaths = {"items", "items.product", "items.product.images"})
+    @EntityGraph(attributePaths = {"items"})
     @Query("SELECT o FROM Order o WHERE o.orderNumber = :orderNumber")
     Optional<Order> findByOrderNumberWithItems(@Param("orderNumber") String orderNumber);
 
-    @EntityGraph(attributePaths = {"items", "items.product", "items.product.images"})
+    @EntityGraph(attributePaths = {"items"})
     @Query("SELECT o FROM Order o WHERE o.razorpayOrderId = :razorpayOrderId")
     Optional<Order> findByRazorpayOrderIdWithItems(@Param("razorpayOrderId") String razorpayOrderId);
 

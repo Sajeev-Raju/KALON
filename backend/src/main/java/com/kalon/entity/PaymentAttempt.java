@@ -7,10 +7,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payment_attempts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"order"})
 public class PaymentAttempt {
 
     @Id

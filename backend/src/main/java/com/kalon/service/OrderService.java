@@ -8,6 +8,7 @@ import com.kalon.exception.OrderStateException;
 import com.kalon.exception.PaymentException;
 import com.kalon.exception.ResourceNotFoundException;
 import com.kalon.repository.*;
+import com.kalon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,9 @@ public class OrderService {
     private final PaymentMethodConfigService paymentMethodConfigService;
     private final EmailService emailService;
     private final StockMovementService stockMovementService;
+    private final TaxService taxService;
+    private final CouponService couponService;
+    private final CouponRepository couponRepository;
 
     // ────────────────────────────── Read operations ──────────────────────────────
 
@@ -135,14 +139,14 @@ public class OrderService {
 
         ShippingAddress shippingAddress = buildShippingAddress(address);
 
-        // Create order — COD orders are confirmed immediately
+        // Create order — COD orders start as PENDING and need admin confirmation
         Order order = Order.builder()
                 .user(user)
                 .subtotal(BigDecimal.ZERO)
                 .shippingCost(BigDecimal.ZERO)
                 .taxAmount(BigDecimal.ZERO)
                 .totalAmount(BigDecimal.ZERO)
-                .status(Order.OrderStatus.CONFIRMED)
+                .status(Order.OrderStatus.PENDING)
                 .paymentStatus(Order.PaymentStatus.PENDING)
                 .paymentMethod(paymentMethod)
                 .shippingAddress(shippingAddress)
@@ -157,10 +161,28 @@ public class OrderService {
         // Calculate totals
         BigDecimal shippingCost = subtotal.compareTo(new BigDecimal("999")) >= 0 ?
                 BigDecimal.ZERO : new BigDecimal("99");
-        BigDecimal totalAmount = subtotal.add(shippingCost);
+
+        // Apply coupon discount
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            com.kalon.entity.Coupon coupon = couponService.findByCode(request.getCouponCode());
+            couponService.validateAndCalculateDiscount(request.getCouponCode(), subtotal, userId);
+            discountAmount = couponService.calculateDiscountAmount(coupon, subtotal);
+            order.setCouponCode(coupon.getCode());
+            order.setCouponId(coupon.getId());
+            couponService.recordCouponUsage(coupon, user, order);
+        }
+
+        // Calculate tax (inclusive - GST is part of the product price)
+        BigDecimal taxableAmount = subtotal.subtract(discountAmount);
+        BigDecimal taxAmount = taxService.calculateInclusiveTax(taxableAmount);
+
+        BigDecimal totalAmount = subtotal.add(shippingCost).subtract(discountAmount);
 
         order.setSubtotal(subtotal);
         order.setShippingCost(shippingCost);
+        order.setDiscountAmount(discountAmount);
+        order.setTaxAmount(taxAmount);
         order.setTotalAmount(totalAmount);
 
         // Validate amount limits for COD
@@ -225,10 +247,28 @@ public class OrderService {
 
         BigDecimal shippingCost = subtotal.compareTo(new BigDecimal("999")) >= 0 ?
                 BigDecimal.ZERO : new BigDecimal("99");
-        BigDecimal totalAmount = subtotal.add(shippingCost);
+
+        // Apply coupon discount
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        if (request.getCouponCode() != null && !request.getCouponCode().isBlank()) {
+            com.kalon.entity.Coupon coupon = couponService.findByCode(request.getCouponCode());
+            couponService.validateAndCalculateDiscount(request.getCouponCode(), subtotal, userId);
+            discountAmount = couponService.calculateDiscountAmount(coupon, subtotal);
+            order.setCouponCode(coupon.getCode());
+            order.setCouponId(coupon.getId());
+            couponService.recordCouponUsage(coupon, user, order);
+        }
+
+        // Calculate tax (inclusive - GST is part of the product price)
+        BigDecimal taxableAmount = subtotal.subtract(discountAmount);
+        BigDecimal taxAmount = taxService.calculateInclusiveTax(taxableAmount);
+
+        BigDecimal totalAmount = subtotal.add(shippingCost).subtract(discountAmount);
 
         order.setSubtotal(subtotal);
         order.setShippingCost(shippingCost);
+        order.setDiscountAmount(discountAmount);
+        order.setTaxAmount(taxAmount);
         order.setTotalAmount(totalAmount);
         order = orderRepository.save(order);
 

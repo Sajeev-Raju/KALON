@@ -3,9 +3,13 @@ package com.kalon.controller;
 import com.kalon.dto.ApiResponse;
 import com.kalon.dto.CreateOrderRequest;
 import com.kalon.dto.OrderDTO;
+import com.kalon.entity.Order;
 import com.kalon.entity.User;
+import com.kalon.exception.OrderAccessException;
 import com.kalon.exception.ResourceNotFoundException;
+import com.kalon.repository.OrderRepository;
 import com.kalon.repository.UserRepository;
+import com.kalon.service.InvoiceService;
 import com.kalon.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,8 @@ public class OrderController {
 
     private final OrderService orderService;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final InvoiceService invoiceService;
     private final com.kalon.service.PaymentMethodConfigService paymentMethodConfigService;
 
     @GetMapping
@@ -111,6 +117,27 @@ public class OrderController {
     @GetMapping("/payment-methods")
     public ResponseEntity<ApiResponse<java.util.List<com.kalon.dto.PaymentMethodConfigDTO>>> getEnabledPaymentMethods() {
         return ResponseEntity.ok(ApiResponse.success(paymentMethodConfigService.getEnabledMethods()));
+    }
+
+    @GetMapping("/{orderId}/invoice")
+    public ResponseEntity<byte[]> downloadInvoice(@PathVariable Long orderId,
+                                                    @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new OrderAccessException("Order does not belong to user");
+        }
+
+        byte[] pdfBytes = invoiceService.generateInvoicePdf(order);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "attachment; filename=invoice-" + order.getOrderNumber() + ".pdf")
+                .body(pdfBytes);
     }
 
     private Long getUserId(UserDetails userDetails) {

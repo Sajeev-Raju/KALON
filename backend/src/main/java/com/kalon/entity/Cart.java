@@ -8,10 +8,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "carts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"user", "items"})
 public class Cart {
 
     @Id

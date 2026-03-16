@@ -114,8 +114,36 @@ public class AuthService {
                     "This account uses Google sign-in. Please use the Google button to login.");
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        // Check if account is locked
+        if (user.getLockedUntil() != null && user.getLockedUntil().isAfter(LocalDateTime.now())) {
+            long minutesRemaining = java.time.Duration.between(LocalDateTime.now(), user.getLockedUntil()).toMinutes() + 1;
+            throw new AccountDisabledException(
+                    "Account is temporarily locked. Try again after " + minutesRemaining + " minutes.");
+        }
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        } catch (BadCredentialsException ex) {
+            int attempts = user.getFailedLoginAttempts() + 1;
+            user.setFailedLoginAttempts(attempts);
+            log.warn("Failed login attempt: email={}, attempts={}", request.getEmail(), attempts);
+            if (attempts >= 5) {
+                user.setLockedUntil(LocalDateTime.now().plusMinutes(15));
+                userRepository.save(user);
+                throw new AccountDisabledException(
+                        "Account is temporarily locked due to too many failed attempts. Try again after 15 minutes.");
+            }
+            userRepository.save(user);
+            throw new BadCredentialsException("Invalid email or password");
+        }
+
+        // Reset failed login attempts on successful login
+        if (user.getFailedLoginAttempts() > 0) {
+            user.setFailedLoginAttempts(0);
+            user.setLockedUntil(null);
+            userRepository.save(user);
+        }
 
         log.info("User logged in: userId={}, email={}", user.getId(), user.getEmail());
         return buildAuthResponse(user);

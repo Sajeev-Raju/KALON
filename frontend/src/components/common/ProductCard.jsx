@@ -73,6 +73,7 @@ const ProductCard = ({ product }) => {
           src={isHovered ? secondaryImage : primaryImage}
           alt={product.name}
           className="product-image"
+          loading="lazy"
         />
 
         {/* Badges */}

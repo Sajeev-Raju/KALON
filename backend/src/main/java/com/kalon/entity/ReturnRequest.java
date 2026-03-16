@@ -7,10 +7,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "return_requests")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"order", "orderItem"})
 public class ReturnRequest {
 
     @Id

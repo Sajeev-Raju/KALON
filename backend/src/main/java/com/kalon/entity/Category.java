@@ -8,11 +8,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "categories")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"parent", "subcategories", "products"})
+@EqualsAndHashCode(of = "id")
 @ToString(exclude = {"parent", "subcategories", "products"})
 public class Category {
 

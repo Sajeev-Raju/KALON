@@ -12,4 +12,6 @@ public class CreateOrderRequest {
     private String paymentMethod;
 
     private String notes;
+
+    private String couponCode;
 }

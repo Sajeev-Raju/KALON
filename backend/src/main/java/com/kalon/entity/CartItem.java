@@ -6,10 +6,13 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cart_items")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"cart", "product", "variant"})
 public class CartItem {
 
     @Id

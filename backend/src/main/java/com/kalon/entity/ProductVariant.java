@@ -5,11 +5,12 @@ import lombok.*;
 
 @Entity
 @Table(name = "product_variants")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"product"})
+@EqualsAndHashCode(of = "id")
 @ToString(exclude = {"product"})
 public class ProductVariant {
 

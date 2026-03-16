@@ -11,11 +11,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "products")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"images", "variants", "reviews", "category"})
+@EqualsAndHashCode(of = "id")
 @ToString(exclude = {"images", "variants", "reviews", "category"})
 public class Product {
 

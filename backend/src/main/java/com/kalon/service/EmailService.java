@@ -229,6 +229,25 @@ public class EmailService {
         }
     }
 
+    // ─── 9. Abandoned Cart Email ───
+
+    @Async
+    public void sendAbandonedCartEmail(User user, int itemCount) {
+        if (!emailEnabled) return;
+        try {
+            Context context = new Context();
+            context.setVariable("userName", user.getFirstName());
+            context.setVariable("itemCount", itemCount);
+            context.setVariable("cartUrl", frontendUrl + "/cart");
+
+            String html = templateEngine.process("abandoned-cart-email", context);
+            sendHtmlEmail(user.getEmail(), "You left items in your cart!", html);
+            log.info("Abandoned cart email sent to: {}", user.getEmail());
+        } catch (Exception e) {
+            log.error("Failed to send abandoned cart email to {}: {}", user.getEmail(), e.getMessage());
+        }
+    }
+
     // ─── Private helpers ───
 
     private Context buildOrderContext(User user, Order order) {

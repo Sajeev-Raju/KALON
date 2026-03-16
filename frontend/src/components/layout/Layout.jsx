@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import Header from './Header';
 import Footer from './Footer';
+import BackToTop from '../common/BackToTop';
 import { fetchCart, addToCart } from '../../redux/slices/cartSlice';
 import { fetchWishlist, addToWishlist } from '../../redux/slices/wishlistSlice';
 import { clearGuestCart } from '../../redux/slices/guestCartSlice';
@@ -97,6 +98,7 @@ const Layout = ({ children }) => {
         {children}
       </main>
       <Footer />
+      <BackToTop />
       <Toaster
         position="bottom-right"
         toastOptions={{

@@ -10,10 +10,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"user", "items"})
 public class Order {
 
     @Id
@@ -29,18 +32,22 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
+    @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     @Column(name = "shipping_cost", precision = 10, scale = 2)
+    @Builder.Default
     private BigDecimal shippingCost = BigDecimal.ZERO;
 
     @Column(name = "tax_amount", precision = 10, scale = 2)
+    @Builder.Default
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Column(name = "discount_amount", precision = 10, scale = 2)
+    @Builder.Default
     private BigDecimal discountAmount = BigDecimal.ZERO;
 
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
@@ -48,10 +55,12 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private OrderStatus status = OrderStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
+    @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
@@ -69,6 +78,12 @@ public class Order {
 
     @Column(name = "tracking_number")
     private String trackingNumber;
+
+    @Column(name = "coupon_code")
+    private String couponCode;
+
+    @Column(name = "coupon_id")
+    private Long couponId;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;

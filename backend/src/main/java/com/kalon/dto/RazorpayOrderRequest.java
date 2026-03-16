@@ -8,6 +8,7 @@ public class RazorpayOrderRequest {
     @NotNull(message = "Address ID is required")
     private Long addressId;
     private String notes;
+    private String couponCode;
 }
 
 

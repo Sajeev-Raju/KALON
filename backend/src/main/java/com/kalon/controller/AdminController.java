@@ -3,6 +3,7 @@ package com.kalon.controller;
 import com.kalon.dto.*;
 import com.kalon.service.AdminService;
 import com.kalon.service.CategoryService;
+import com.kalon.service.CouponService;
 import com.kalon.service.OrderService;
 import com.kalon.service.ProductService;
 import com.kalon.service.SiteConfigService;
@@ -40,6 +41,9 @@ public class AdminController {
     private final com.kalon.service.OrderExportService orderExportService;
     private final com.kalon.service.PaymentMethodConfigService paymentMethodConfigService;
     private final com.kalon.service.StockMovementService stockMovementService;
+    private final com.kalon.service.InvoiceService invoiceService;
+    private final com.kalon.repository.OrderRepository orderRepository;
+    private final CouponService couponService;
 
     // Dashboard
     @GetMapping("/dashboard/stats")
@@ -393,6 +397,19 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success("Payment method " + (enabled ? "enabled" : "disabled"), result));
     }
 
+    @GetMapping("/orders/{orderId}/invoice")
+    public ResponseEntity<byte[]> downloadInvoiceAdmin(@PathVariable Long orderId) {
+        com.kalon.entity.Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new com.kalon.exception.ResourceNotFoundException("Order not found"));
+
+        byte[] pdfBytes = invoiceService.generateInvoicePdf(order);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "attachment; filename=invoice-" + order.getOrderNumber() + ".pdf")
+                .body(pdfBytes);
+    }
+
     // Payment Attempts (Admin view)
     @GetMapping("/orders/{orderId}/payment-attempts")
     public ResponseEntity<ApiResponse<java.util.List<PaymentAttemptDTO>>> getPaymentAttemptsForAdmin(
@@ -736,5 +753,48 @@ public class AdminController {
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(ApiResponse.success(stockMovementService.getMovementsByProduct(productId, pageable)));
+    }
+
+    // ─── Coupon Management ───
+
+    @GetMapping("/coupons")
+    public ResponseEntity<ApiResponse<Page<CouponDTO>>> getAllCoupons(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(ApiResponse.success(couponService.getAllCoupons(pageable)));
+    }
+
+    @GetMapping("/coupons/{id}")
+    public ResponseEntity<ApiResponse<CouponDTO>> getCouponById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(couponService.getCouponById(id)));
+    }
+
+    @PostMapping("/coupons")
+    public ResponseEntity<ApiResponse<CouponDTO>> createCoupon(@Valid @RequestBody CreateCouponRequest request) {
+        CouponDTO created = couponService.createCoupon(request);
+        activityLogService.log(com.kalon.entity.AdminActivityLog.Action.CREATE,
+                com.kalon.entity.AdminActivityLog.ResourceType.SITE_CONFIG,
+                created.getId(), created.getCode(), "Coupon created");
+        return ResponseEntity.ok(ApiResponse.success("Coupon created", created));
+    }
+
+    @PutMapping("/coupons/{id}")
+    public ResponseEntity<ApiResponse<CouponDTO>> updateCoupon(@PathVariable Long id,
+            @Valid @RequestBody CreateCouponRequest request) {
+        CouponDTO updated = couponService.updateCoupon(id, request);
+        activityLogService.log(com.kalon.entity.AdminActivityLog.Action.UPDATE,
+                com.kalon.entity.AdminActivityLog.ResourceType.SITE_CONFIG,
+                id, updated.getCode(), "Coupon updated");
+        return ResponseEntity.ok(ApiResponse.success("Coupon updated", updated));
+    }
+
+    @PostMapping("/coupons/{id}/toggle")
+    public ResponseEntity<ApiResponse<Void>> toggleCouponStatus(@PathVariable Long id) {
+        couponService.toggleCouponStatus(id);
+        activityLogService.log(com.kalon.entity.AdminActivityLog.Action.STATUS_CHANGE,
+                com.kalon.entity.AdminActivityLog.ResourceType.SITE_CONFIG,
+                id, null, "Coupon status toggled");
+        return ResponseEntity.ok(ApiResponse.success("Coupon status toggled", null));
     }
 }
